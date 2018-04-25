@@ -1,0 +1,136 @@
+<canvas id="myCanvas" width="1200" height="500" style="border:1px solid #000000;">
+</canvas>
+<button onclick="playMelody()">Play</button>
+<input type="button" value="Stop" onClick="window.location.reload()">
+<script>
+    //notes frequency and duration
+    notes = [
+        [659, 4],
+        [659, 4],
+        [659, 4],
+        [523, 8],
+        [0, 16],
+        [783, 16],
+        [659, 4],
+        [523, 8],
+        [0, 16],
+        [783, 16],
+        [659, 4],
+        [0, 4],
+        [987, 4],
+        [987, 4],
+        [987, 4],
+        [1046, 8],
+        [0, 16],
+        [783, 16],
+        [622, 4],
+        [523, 8],
+        [0, 16],
+        [783, 16],
+        [659, 4],
+        [0, 32],
+        [659, 4],
+        [659, 4],
+        [659, 4],
+        [523, 8],
+        [0, 16],
+        [783, 16],
+        [659, 4],
+        [523, 8],
+        [0, 16],
+        [783, 16],
+        [659, 4],
+        [0, 4],
+        [987, 4],
+        [987, 4],
+        [987, 4],
+        [1046, 8],
+        [0, 16],
+        [783, 16],
+        [622, 4],
+        [523, 8],
+        [0, 16],
+        [783, 16],
+        [659, 4]
+    ];
+    
+    //reverse table
+    notes.reverse();
+    
+    //speed
+    tempo = 100;
+    
+    //canvas
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    // create web audio api context
+    var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+    var i = 0;
+    var j = notes.length - 1;
+
+    
+    //play melody
+    function playMelody() {
+        if (notes.length > 0) {
+            
+            //notes color
+            if (notes[j][0] == 0) {
+                ctx.fillStyle = "black";
+                ctx.fill();
+            }
+            if (notes[j][0] > 0 && notes[j][0] <= 600) {
+                ctx.fillStyle = "yellow";
+                ctx.fill();
+            }
+            if (notes[j][0] > 600 && notes[j][0] <= 800) {
+                ctx.fillStyle = "orange";
+                ctx.fill();
+            }
+            if (notes[j][0] > 800 && notes[j][0] <= 1000) {
+                ctx.fillStyle = "red";
+                ctx.fill();
+            }
+            if (notes[j][0] > 1000) {
+                ctx.fillStyle = "blue";
+                ctx.fill();
+
+            }
+            
+            //notes rectangles
+            ctx.stroke();
+            ctx.fillRect(i, c.height / 2, notes[j][1] * 2, (-notes[j][0] / 3) / 2);
+            ctx.fillRect(i, c.height / 2, notes[j][1] * 2, (notes[j][0] / 3) / 2);
+            ctx.moveTo(0,c.height/2);
+            ctx.lineTo(c.width,c.height/2);
+            ctx.stroke();
+
+            //playing
+            i += notes[j][1] * 2;
+            note = notes.pop();
+            playNote(note[0], 1000 * 256 / (note[1] * tempo));
+
+
+        }
+        j--;
+    }
+    //console.log(notes);
+
+    
+    function playNote(frequency, duration) {
+        // create Oscillator node
+        var oscillator = audioCtx.createOscillator();
+
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime); // value in hertz
+        oscillator.connect(audioCtx.destination);
+        oscillator.start();
+
+        setTimeout(
+            function() {
+                oscillator.stop();
+                playMelody();
+            }, duration);
+    }
+
+</script>
