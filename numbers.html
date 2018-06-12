@@ -121,7 +121,7 @@
         // create Oscillator node
         var oscillator = audioCtx.createOscillator();
 
-        oscillator.type = 'square';
+        oscillator.type = 'triangle';
         oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime); // value in hertz
         oscillator.connect(audioCtx.destination);
         oscillator.start();
